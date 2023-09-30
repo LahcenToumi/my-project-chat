@@ -1,7 +1,7 @@
 
 ### dev Toumi Lahcen #my-project-chat
 
-### ------------install package------------------
+
 
 ### ------------Start project------------------
 ### start laravel
