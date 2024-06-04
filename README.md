@@ -14,11 +14,11 @@
 - ```php artisan migrate```
 
 ### start laravel
-    ```php artisan serve```
+   php artisan serve
 
 ### start breeze/react 
-    ```npm run dev```
+    npm run dev
     
 ### start webSocket
-    ```php artisan websocket:serve```
+    php artisan websocket:serve
 
