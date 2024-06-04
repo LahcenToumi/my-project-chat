@@ -3,7 +3,7 @@
 
 ### Clone the Repository, Install Dependencies, and Set Up:
 
-    `git clone https://github.com/toumi-v7/my-project-chat.git`
+-    `git clone https://github.com/toumi-v7/my-project-chat.git`
 
     cd my-project-chat
 
