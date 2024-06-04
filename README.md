@@ -3,18 +3,18 @@
 
 ### Clone the Repository, Install Dependencies, and Set Up:
 
-- ```git clone https://github.com/toumi-v7/my-project-chat.git```
+    git clone https://github.com/toumi-v7/my-project-chat.git
 
-- ```cd my-project-chat```
+    cd my-project-chat
 
-- ```composer install```
+    composer install
 
-- ```php artisan storage:link```
+    php artisan storage:link
 
-- ```php artisan migrate```
+    php artisan migrate
 
 ### start laravel
-   php artisan serve
+    php artisan serve
 
 ### start breeze/react 
     npm run dev
