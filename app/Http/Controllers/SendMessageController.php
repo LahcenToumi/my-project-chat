@@ -79,7 +79,7 @@ class SendMessageController extends Controller
                  'status_Message'=>$fileType,
                  'chat_id' => $request->chat_id,
                  'Originale_Name_File'=>$key->getClientOriginalName(),
-                 'sizeFile'=>$key->getSize(),
+                 'sizeFile'=>$key->getSize() ?? '100024',
              ]);
              
              // -----------------------------------------------------
