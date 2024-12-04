@@ -37,7 +37,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return redirect()->back();
+        return redirect('/profile');
     }
 
     /**
@@ -58,7 +58,7 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect('/');
     }
 /**
  * @@change Image profilt 
