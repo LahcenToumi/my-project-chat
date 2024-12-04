@@ -1,0 +1,126 @@
+name: Laravel + React Breeze Deployment with MySQL
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testing_db
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: password
+
+    steps:
+    # Step 1: Set up PHP and Composer
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, pdo, bcmath, ctype, json, xml, sockets
+
+    # Step 2: Check out the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # Step 3: Copy .env file
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+    # Step 4: Install Laravel Dependencies
+    - name: Install Laravel Dependencies
+      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    # Step 5: Configure .env for MySQL
+    - name: Update .env for MySQL
+      run: |
+        sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
+        sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+        sed -i 's/DB_PORT=.*/DB_PORT=3306/' .env
+        sed -i 's/DB_DATABASE=.*/DB_DATABASE=testing_db/' .env
+        sed -i 's/DB_USERNAME=.*/DB_USERNAME=laravel/' .env
+        sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=password/' .env
+
+    # Step 6: Generate Laravel Application Key
+    - name: Generate Application Key
+      run: php artisan key:generate
+
+    # Step 7: Run Laravel Migrations
+    - name: Run Migrations
+      run: php artisan migrate --force
+
+    # Step 8: Install Node.js for React Breeze
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    # Step 9: Install Frontend Dependencies
+    - name: Install Frontend Dependencies
+      run: npm install
+
+    # Step 10: Build Frontend (React Breeze)
+    - name: Build Frontend
+      run: npm run build
+
+    # Step 11: Run Tests
+    - name: Run Laravel Tests
+      env:
+        DB_CONNECTION: mysql
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        DB_DATABASE: testing_db
+        DB_USERNAME: laravel
+        DB_PASSWORD: password
+      run: php artisan test
+
+  laravel-deployment:
+    needs: laravel-tests
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Set up PHP and Composer
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, pdo, bcmath, ctype, json, xml, sockets
+
+    # Step 2: Check out the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # Step 3: Install Dependencies
+    - name: Install Laravel Dependencies
+      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Install Frontend Dependencies
+      run: npm install
+
+    # Step 4: Build Frontend
+    - name: Build Frontend
+      run: npm run build
+
+    # Step 5: Start WebSocket Server
+    - name: Start WebSocket Server
+      run: php artisan websockets:serve
+
+    # Step 6: Deploy Laravel App
+    - name: Deploy to Hosting Platform
+      run: |
+        echo "Add your deployment script here, e.g., upload to Render, Forge, or a custom server."
