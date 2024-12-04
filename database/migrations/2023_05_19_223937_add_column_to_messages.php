@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('messages', function (Blueprint $table) {
             //
-            $table->text('sizeFile')->nullable()->default(100024);
+            $table->text('sizeFile')->nullable();
         });
     }
 
