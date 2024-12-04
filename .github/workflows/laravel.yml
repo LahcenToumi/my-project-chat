@@ -2,9 +2,11 @@ name: Laravel + React Breeze Deployment with MySQL
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   laravel-tests:
@@ -60,7 +62,7 @@ jobs:
     - name: Generate Application Key
       run: php artisan key:generate
 
-    # Step 7: Run Laravel Migrations
+    # Step 7: Run Migrations
     - name: Run Migrations
       run: php artisan migrate --force
 
@@ -116,14 +118,7 @@ jobs:
     - name: Build Frontend
       run: npm run build
 
-    # Step 5: Deploy to Hosting Platform (e.g., Render, Forge, or custom server)
+    # Step 5: Deploy Laravel App (Without starting WebSocket in CI/CD)
     - name: Deploy to Hosting Platform
       run: |
         echo "Add your deployment script here, e.g., upload to Render, Forge, or a custom server."
-
-    # Step 6: Start WebSocket Server on Production (using SSH)
-    - name: Start WebSocket Server (Production)
-      run: |
-        echo "$DEPLOY_KEY" > deploy_key.pem
-        chmod 600 deploy_key.pem
-        ssh -i deploy_key.pem user@your-server "cd /path/to/your/project && php artisan websockets:serve &"
